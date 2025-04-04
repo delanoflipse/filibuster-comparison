@@ -12,13 +12,14 @@ def num_services_running(services):
     num_running = len(services)
     for service in services:
         if not service_running(service):
-            debug("! service " + service + " not yet running!")
+            debug("! service " + str(service) + " not yet running!")
             num_running -= 1
     return num_running
 
 
 def wait_for_num_services_running(services, num_running, waiting_message):
     timeout = TIMEOUT_ITERATIONS
+    time.sleep(3)
     while num_services_running(services) != num_running:
         debug("Filibuster server waiting for {} to {}.".format(services, waiting_message))
         debug("=> num_running: " + str(num_running))
@@ -28,6 +29,7 @@ def wait_for_num_services_running(services, num_running, waiting_message):
         if timeout == 0:
             debug("Filibuster server timed out waiting for {} to {}.".format(services, waiting_message))
             exit(1)
+    time.sleep(3)
 
 
 def wait_for_services_to_stop(services):
@@ -67,7 +69,7 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
-            app.run(port=5005, host="0.0.0.0")
+            app.run(port=5050, host="0.0.0.0")
 
     server_thread = Server()
     server_thread.setDaemon(True)

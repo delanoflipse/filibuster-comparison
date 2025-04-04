@@ -796,7 +796,7 @@ def start_filibuster_server(analysis_file):
 
     start_filibuster_server_thread(app)
 
-    wait_for_services_to_start([('filibuster', '127.0.0.1', 5005)])
+    wait_for_services_to_start([('filibuster', '0.0.0.0', 5050)])
 
 
 def my_percentile(data, percentile):

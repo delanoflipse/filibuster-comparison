@@ -1,0 +1,44 @@
+{
+  "http": {
+    "pattern": "(((requests\\.(get|put|post|head))|(WebClient\\.(GET|PUT|POST|HEAD))))",
+    "errors": [
+      {
+        "service_name": ".*",
+        "types": [
+          {
+            "return_value": {
+              "status_code": "500"
+            }
+          },
+          {
+            "return_value": {
+              "status_code": "502"
+            }
+          },
+          {
+            "return_value": {
+              "status_code": "503"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "grpc": {
+    "pattern": "((grpc\\.insecure\\_channel)|(.*Service/.*))",
+    "errors": [
+      {
+        "service_name": ".*",
+        "types": [
+          {
+            "exception": {
+              "metadata": {
+                "code": "NOT_FOUND"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
