@@ -2,7 +2,7 @@ import requests
 
 from filibuster.logger import error
 
-FILIBUSTER_HOST = "0.0.0.0"
+FILIBUSTER_HOST = "127.0.0.1"
 FILIBUSTER_PORT = "5050"
 TIMEOUT = 10
 
