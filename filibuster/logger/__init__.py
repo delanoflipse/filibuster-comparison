@@ -15,21 +15,26 @@ class BColors:
 
 
 def error(string):
-    print(BColors.FAIL + "[FILIBUSTER] [FAIL]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
-
+    # print(BColors.FAIL + "[FILIBUSTER] [FAIL]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    print("[FILIBUSTER] [FAIL]: " + string, file=sys.stderr, flush=True)
 
 def warning(string):
-    print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    pass
+    # print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
 
 
 def notice(string):
-    print(BColors.OKGREEN + "[FILIBUSTER] [NOTICE]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    # print(BColors.OKGREEN + "[FILIBUSTER] [NOTICE]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    print("[FILIBUSTER] [NOTICE]: " + string, file=sys.stderr, flush=True)
+    
 
 
 def info(string):
-    print(BColors.OKBLUE + "[FILIBUSTER] [INFO]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    # print(BColors.OKBLUE + "[FILIBUSTER] [INFO]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    print("[FILIBUSTER] [INFO]: " + string, file=sys.stderr, flush=True)
 
 
 def debug(string):
     if os.environ.get("DEBUG", ""):
-        print(BColors.OKCYAN + "[FILIBUSTER] [DEBUG]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+        # print(BColors.OKCYAN + "[FILIBUSTER] [DEBUG]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+        print("[FILIBUSTER] [DEBUG]: " + string, file=sys.stderr, flush=True)

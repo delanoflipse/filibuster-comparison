@@ -107,6 +107,7 @@ def _instrument(service_name=None, filibuster_url=None):
     # before v1.0.0, Dec 17, 2012, see
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
+    req_ses = Session()
     wrapped_request = Session.request
     wrapped_send = Session.send
 
@@ -143,7 +144,7 @@ def _instrument(service_name=None, filibuster_url=None):
             else:
                 kwargs['headers'] = additional_headers
 
-            response = wrapped_request(self, method, url, *args, **kwargs)
+            response = req_ses.request(self, method, url, *args, **kwargs)
             debug("instrumented_request.call_wrapped exiting")
             return response
 
@@ -223,7 +224,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
                 response = None
                 if not (os.environ.get('DISABLE_SERVER_COMMUNICATION', '')) and counterexample is None:
-                    response = wrapped_request(self, 'get',
+                    response = req_ses.request(self, 'get',
                                                filibuster_new_test_execution_url(filibuster_url, service_name))
                     if response is not None:
                         response = response.json()
@@ -612,7 +613,7 @@ def _instrument(service_name=None, filibuster_url=None):
                     'vclock': vclock,
                     'return_value': return_value
                 }
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                req_ses.request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
             except Exception as e:
                 warning("Exception raised (_record_successful_response)!")
                 print(e, file=sys.stderr)
@@ -652,7 +653,7 @@ def _instrument(service_name=None, filibuster_url=None):
                 if should_abort is not True:
                     payload['exception']['metadata']['abort'] = should_abort
 
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                req_ses.request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
             except Exception as e:
                 warning("Exception raised (_record_exceptional_response)!")
                 print(e, file=sys.stderr)

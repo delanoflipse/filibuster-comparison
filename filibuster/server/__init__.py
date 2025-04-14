@@ -125,6 +125,9 @@ def run_test(functional_test, only_initial_execution, disable_dynamic_reduction)
             if os.environ.get("PAUSE_BETWEEN", ""):
                 input("Press Enter to start next test...")
 
+            if os.environ.get("SLEEP_BETWEEN", ""):
+                time.sleep(float(os.environ.get("SLEEP_BETWEEN")))
+            
             iteration = iteration + 1
 
             # Quit early if we want to bound the number of tests.
