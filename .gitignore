@@ -10,3 +10,4 @@ analysis.json
 .coverage
 .vscode/
 .venv
+results

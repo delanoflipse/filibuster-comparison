@@ -12,7 +12,7 @@ def num_services_running(services):
     num_running = len(services)
     for service in services:
         if not service_running(service):
-            debug("! service " + service + " not yet running!")
+            debug("! service " + str(service) + " not yet running!")
             num_running -= 1
     return num_running
 
@@ -67,7 +67,7 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
-            app.run(port=5005, host="0.0.0.0")
+            app.run(port=5050, host="0.0.0.0", threaded=True)
 
     server_thread = Server()
     server_thread.setDaemon(True)
