@@ -145,7 +145,7 @@ def _instrument(service_name=None, filibuster_url=None):
             else:
                 kwargs['headers'] = additional_headers
 
-            response = instr_req(self, method, url, *args, **kwargs)
+            response = wrapped_request(self, method, url, *args, **kwargs)
             debug("instrumented_request.call_wrapped exiting")
             return response
 
