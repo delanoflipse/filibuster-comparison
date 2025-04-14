@@ -67,6 +67,7 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
+            # in case of debugging, use without threaded and disable reload
             app.run(port=5050, host="0.0.0.0", threaded=True)
 
     server_thread = Server()

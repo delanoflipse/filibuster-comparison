@@ -102,13 +102,13 @@ def outcomes_match(current_test_execution, previously_ran_completed_request):
                         # TODO: probably broken if more is reported then sent?
                         return is_subset_match(previously_ran_completed_request['exception'], failure['forced_exception'])
                     else:
-                        print("")
-                        print("previously_ran_completed_request['exception']")
-                        print(str(sorted(previously_ran_completed_request['exception'].items())))
-                        print("")
-                        print("failure['failure_metadata']['return_value']")
-                        print(str(sorted(failure['forced_exception'].items())))
-                        print("")
+                        # print("")
+                        # print("previously_ran_completed_request['exception']")
+                        # print(str(sorted(previously_ran_completed_request['exception'].items())))
+                        # print("")
+                        # print("failure['failure_metadata']['return_value']")
+                        # print(str(sorted(failure['forced_exception'].items())))
+                        # print("")
 
                         return False
             else:
@@ -129,15 +129,15 @@ def outcomes_match(current_test_execution, previously_ran_completed_request):
                 else:
                     warning("We shouldn't be here because this means we matched on EI but the requests were different.")
 
-                    print("")
-                    print("subset_match: " + str(subset_match))
-                    print("")
-                    print("previously_ran_completed_request['return_value']")
-                    print(str(sorted(previously_ran_completed_request['return_value'].items())))
-                    print("")
-                    print("failure['failure_metadata']['return_value']")
-                    print(str(sorted(failure['failure_metadata']['return_value'].items())))
-                    print("")
+                    # print("")
+                    # print("subset_match: " + str(subset_match))
+                    # print("")
+                    # print("previously_ran_completed_request['return_value']")
+                    # print(str(sorted(previously_ran_completed_request['return_value'].items())))
+                    # print("")
+                    # print("failure['failure_metadata']['return_value']")
+                    # print(str(sorted(failure['failure_metadata']['return_value'].items())))
+                    # print("")
 
                 return subset_match
             elif 'exception' in previously_ran_completed_request and previously_ran_completed_request['exception'] is not None and \
@@ -146,15 +146,16 @@ def outcomes_match(current_test_execution, previously_ran_completed_request):
                 subset_match = is_subset_match(previously_ran_completed_request['exception'], failure['failure_metadata']['exception'])
 
                 if subset_match is False:
-                    print("")
-                    print("subset_match: " + str(subset_match))
-                    print("")
-                    print("previously_ran_completed_request['exception']")
-                    print(str(sorted(previously_ran_completed_request['exception'].items())))
-                    print("")
-                    print("failure['failure_metadata']['exception']")
-                    print(str(sorted(failure['failure_metadata']['exception'].items())))
-                    print("")
+                    pass
+                    # print("")
+                    # print("subset_match: " + str(subset_match))
+                    # print("")
+                    # print("previously_ran_completed_request['exception']")
+                    # print(str(sorted(previously_ran_completed_request['exception'].items())))
+                    # print("")
+                    # print("failure['failure_metadata']['exception']")
+                    # print(str(sorted(failure['failure_metadata']['exception'].items())))
+                    # print("")
 
                 return subset_match
             else:
@@ -181,18 +182,18 @@ def outcomes_match(current_test_execution, previously_ran_completed_request):
                 return True
             else:
                 warning("We shouldn't be here because this means we matched on EI but the requests were different.")
-                print("")
-                print("subset_match: " + str(subset_match))
-                print("")
-                print("SCHEDULED REQUEST ******")
-                print(str(sorted(scheduled_request.items())))
-                print("")
-                print("FAILURE ****************")
-                print(str(failure))
-                print("")
-                print("PREVIOUSLY RAN *********")
-                print(str(sorted(previously_ran_completed_request.items())))
-                print("")
+                # print("")
+                # print("subset_match: " + str(subset_match))
+                # print("")
+                # print("SCHEDULED REQUEST ******")
+                # print(str(sorted(scheduled_request.items())))
+                # print("")
+                # print("FAILURE ****************")
+                # print(str(failure))
+                # print("")
+                # print("PREVIOUSLY RAN *********")
+                # print(str(sorted(previously_ran_completed_request.items())))
+                # print("")
 
                 describe_test_execution(current_test_execution, None, False)
 
