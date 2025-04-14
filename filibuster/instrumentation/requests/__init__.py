@@ -108,9 +108,9 @@ def _instrument(service_name=None, filibuster_url=None):
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
     req_ses = Session()
-    instr_req = req_ses.request
-    wrapped_request = Session.request
-    wrapped_send = Session.send
+    instr_req = req_ses.request.__func__
+    wrapped_request = Session.request.__func__
+    wrapped_send = Session.send.__func__
 
     def filibuster_update_url(filibuster_url):
         return "{}/{}/update".format(filibuster_url, 'filibuster')
@@ -225,7 +225,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
                 response = None
                 if not (os.environ.get('DISABLE_SERVER_COMMUNICATION', '')) and counterexample is None:
-                    response = instr_req(self, 'get',
+                    response = instr_req(req_ses, 'get',
                                                filibuster_new_test_execution_url(filibuster_url, service_name))
                     if response is not None:
                         response = response.json()
@@ -614,7 +614,7 @@ def _instrument(service_name=None, filibuster_url=None):
                     'vclock': vclock,
                     'return_value': return_value
                 }
-                instr_req(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                instr_req(req_ses, 'post', filibuster_update_url(filibuster_url), json=payload)
             except Exception as e:
                 warning("Exception raised (_record_successful_response)!")
                 print(e, file=sys.stderr)
@@ -654,7 +654,7 @@ def _instrument(service_name=None, filibuster_url=None):
                 if should_abort is not True:
                     payload['exception']['metadata']['abort'] = should_abort
 
-                instr_req(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                instr_req(req_ses, 'post', filibuster_update_url(filibuster_url), json=payload)
             except Exception as e:
                 warning("Exception raised (_record_exceptional_response)!")
                 print(e, file=sys.stderr)
