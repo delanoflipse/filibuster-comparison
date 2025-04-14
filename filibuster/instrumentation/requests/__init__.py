@@ -109,8 +109,8 @@ def _instrument(service_name=None, filibuster_url=None):
 
     req_ses = Session()
     instr_req = req_ses.request
-    wrapped_request = Session.request.__func__
-    wrapped_send = Session.send.__func__
+    wrapped_request = Session.request
+    wrapped_send = Session.send
 
     def filibuster_update_url(filibuster_url):
         return "{}/{}/update".format(filibuster_url, 'filibuster')
