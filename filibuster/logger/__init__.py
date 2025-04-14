@@ -21,6 +21,7 @@ def error(string):
 def warning(string):
     pass
     # print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    # print("[FILIBUSTER] [WARNING]: " + string, file=sys.stderr, flush=True)
 
 
 def notice(string):

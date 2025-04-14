@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import time
 import requests
 import threading
@@ -68,7 +69,7 @@ def start_filibuster_server_thread(app):
 
         def run(self):
             # in case of debugging:
-            app.run(port=5050, host="0.0.0.0", threaded=True, debug=True, use_reloader=False)
+            app.run(port=5050, host="0.0.0.0", threaded=True, debug=False, use_reloader=False)
             # app.run(port=5050, host="0.0.0.0", threaded=True)
 
     server_thread = Server()
