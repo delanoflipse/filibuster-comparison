@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import time
 import requests
 import threading
@@ -19,7 +20,6 @@ def num_services_running(services):
 
 def wait_for_num_services_running(services, num_running, waiting_message):
     timeout = TIMEOUT_ITERATIONS
-    time.sleep(3)
     while num_services_running(services) != num_running:
         debug("Filibuster server waiting for {} to {}.".format(services, waiting_message))
         debug("=> num_running: " + str(num_running))
@@ -29,7 +29,6 @@ def wait_for_num_services_running(services, num_running, waiting_message):
         if timeout == 0:
             debug("Filibuster server timed out waiting for {} to {}.".format(services, waiting_message))
             exit(1)
-    time.sleep(3)
 
 
 def wait_for_services_to_stop(services):
@@ -69,7 +68,9 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
-            app.run(port=5050, host="0.0.0.0")
+            # in case of debugging:
+            app.run(port=5050, host="0.0.0.0", threaded=True, debug=False, use_reloader=False)
+            # app.run(port=5050, host="0.0.0.0", threaded=True)
 
     server_thread = Server()
     server_thread.setDaemon(True)

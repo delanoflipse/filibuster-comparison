@@ -28,6 +28,9 @@ from requests.sessions import Session
 from requests.structures import CaseInsensitiveDict
 from requests import exceptions
 
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 from threading import Lock
 
 from filibuster.global_context import get_value as _filibuster_global_context_get_value
@@ -107,6 +110,13 @@ def _instrument(service_name=None, filibuster_url=None):
     # before v1.0.0, Dec 17, 2012, see
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
+    req_ses = Session()
+    req_ses.mount("http://", HTTPAdapter(max_retries=Retry(
+        total=3,
+        backoff_factor=0.1,
+    )))
+    DEFAULT_INSTR_TIMEOUT = (0.5, 1.5)
+    instr_req = req_ses.request
     wrapped_request = Session.request
     wrapped_send = Session.send
 
@@ -223,8 +233,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
                 response = None
                 if not (os.environ.get('DISABLE_SERVER_COMMUNICATION', '')) and counterexample is None:
-                    response = wrapped_request(self, 'get',
-                                               filibuster_new_test_execution_url(filibuster_url, service_name))
+                    response = instr_req('get', filibuster_new_test_execution_url(filibuster_url, service_name), timeout=DEFAULT_INSTR_TIMEOUT)
                     if response is not None:
                         response = response.json()
 
@@ -612,7 +621,7 @@ def _instrument(service_name=None, filibuster_url=None):
                     'vclock': vclock,
                     'return_value': return_value
                 }
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                instr_req('post', filibuster_update_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
             except Exception as e:
                 warning("Exception raised (_record_successful_response)!")
                 print(e, file=sys.stderr)
@@ -652,7 +661,7 @@ def _instrument(service_name=None, filibuster_url=None):
                 if should_abort is not True:
                     payload['exception']['metadata']['abort'] = should_abort
 
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                instr_req('post', filibuster_update_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
             except Exception as e:
                 warning("Exception raised (_record_exceptional_response)!")
                 print(e, file=sys.stderr)

@@ -19,6 +19,11 @@
             "return_value": {
               "status_code": "503"
             }
+          },
+          {
+            "return_value": {
+              "status_code": "504"
+            }
           }
         ]
       }

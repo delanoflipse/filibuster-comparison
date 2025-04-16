@@ -125,6 +125,9 @@ def run_test(functional_test, only_initial_execution, disable_dynamic_reduction)
             if os.environ.get("PAUSE_BETWEEN", ""):
                 input("Press Enter to start next test...")
 
+            if os.environ.get("SLEEP_BETWEEN", ""):
+                time.sleep(float(os.environ.get("SLEEP_BETWEEN")))
+            
             iteration = iteration + 1
 
             # Quit early if we want to bound the number of tests.
@@ -796,7 +799,9 @@ def start_filibuster_server(analysis_file):
 
     start_filibuster_server_thread(app)
 
-    wait_for_services_to_start([('filibuster', '0.0.0.0', 5050)])
+    wait_for_services_to_start([('filibuster', '127.0.0.1', 5050)])
+    # wait for dns to propagate
+    time.sleep(5)
 
 
 def my_percentile(data, percentile):
