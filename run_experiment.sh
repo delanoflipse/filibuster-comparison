@@ -34,8 +34,9 @@ debug=${DEBUG:-""}
 FLASK_DEBUG=$flask_debug DEBUG=$debug AWS_ACCOUNT_ID=194095331551 REGION=us-east-2 docker compose -f "$benchmark_dir/docker-compose.yml" up -d --remove-orphans --force-recreate
 
 # Run the experiment
-poetry shell
-SLEEP_BETWEEN=0 python filibuster_cli.py \
+ulimit -n 65535
+fuser -k 5050/tcp 2>/dev/null
+SLEEP_BETWEEN=0 poetry run python filibuster_cli.py \
     --functional-test="python $benchmark_dir/functional/$functiona_test_file" \
     --analysis-file="comparison-analysis.json" \
     2>&1 | tee "$result_dir/filibuster.log"
