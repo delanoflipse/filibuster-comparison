@@ -182,7 +182,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
         def call_wrapped(additional_headers):
             debug("instrumented_send.call_wrapped entering")
-            response = instrumented_send(request, **kwargs)
+            response = instrumentation_send(request, **kwargs)
             debug("instrumented_send.call_wrapped exiting")
             return response
 
