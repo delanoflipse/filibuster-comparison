@@ -2,6 +2,7 @@ import time
 import requests
 import threading
 
+from waitress import serve
 from filibuster.assertions import FILIBUSTER_PORT
 from filibuster.logger import debug
 
@@ -69,9 +70,11 @@ def start_filibuster_server_thread(app):
 
         def run(self):
             # in case of debugging:
-            app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True, debug=False, use_reloader=False)
+            serve(app, listen='*:' + FILIBUSTER_PORT, threads=4)
+            # app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True, debug=False, use_reloader=False)
             # app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True)
 
+    
     server_thread = Server()
     server_thread.setDaemon(True)
     server_thread.start()

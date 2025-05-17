@@ -4,9 +4,11 @@ result_tag=$1:
 run_n_benchmark() {
     local benchmark_id=$1
     local test_name=$2
+    local base_tag=${3:-$result_tag}
 
     for ((i=1; i<=iterations; i++)); do
-        iteration_tag="${result_tag}${i}"
+        test_tag=${test_name//./_}
+        iteration_tag="${base_tag}${test_tag}${i}"
         
         build_before=$(( i == 0 ? 1 : 0 ))
         skip_restart=$(( i > 1 ? 1 : 0 ))
@@ -20,6 +22,8 @@ run_n_benchmark() {
         TAG=$iteration_tag SKIP_RESTART=$skip_restart BUILD_BEFORE=$build_before STOP_AFTER=$stop_after ./run_experiment.sh ${benchmark_id} ${test_name}
     done
 }
+
+trap "exit" INT
 
 
 run_n_benchmark cinema-1 
@@ -36,3 +40,5 @@ run_n_benchmark expedia
 run_n_benchmark mailchimp test_get_url_random.py
 run_n_benchmark mailchimp test_get_url.py
 run_n_benchmark netflix
+export NETFLIX_FAULTS=1
+run_n_benchmark netflix test_get_homepage.py faults

@@ -46,7 +46,7 @@ fi
 # Run the experiment
 # export PRINT_RESPONSES=1
 
-SLEEP_BETWEEN=0 poetry run python filibuster_cli.py \
+poetry run python filibuster_cli.py \
     --functional-test="python $benchmark_dir/functional/$functiona_test_file" \
     --analysis-file="comparison-analysis.json" \
     2>&1 | tee "$result_dir/filibuster.log"
