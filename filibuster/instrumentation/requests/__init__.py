@@ -96,6 +96,7 @@ else:
     counterexample = None
 
 
+adapter = HTTPAdapter(pool_connections=100, pool_maxsize=100)
 # pylint: disable=unused-argument
 # pylint: disable=R0915
 def _instrument(service_name=None, filibuster_url=None):
@@ -111,11 +112,10 @@ def _instrument(service_name=None, filibuster_url=None):
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
     instr_ses = Session()
+    instr_ses.mount("http://", adapter)
     req_ses = Session()
-    # req_ses.mount("http://", HTTPAdapter(max_retries=Retry(
-    #     connect=1,
-    #     backoff_factor=0.1,
-    # )))
+    req_ses.mount("https://", adapter)
+
     DEFAULT_INSTR_TIMEOUT = (1, 1)
 
     filibuster_request = req_ses.request
