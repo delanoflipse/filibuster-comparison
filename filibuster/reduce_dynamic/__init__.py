@@ -194,8 +194,7 @@ def outcomes_match(current_test_execution, previously_ran_completed_request):
                 # print("PREVIOUSLY RAN *********")
                 # print(str(sorted(previously_ran_completed_request.items())))
                 # print("")
-
-                describe_test_execution(current_test_execution, None, False)
+                # describe_test_execution(current_test_execution, None, False)
 
                 return False
 

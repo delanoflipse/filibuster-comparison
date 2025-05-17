@@ -606,6 +606,7 @@ def create():
     except Exception as e:
         error("Exception when calling CREATE: ")
         print(e, file=sys.stderr)
+        return jsonify({})
 
 
 @app.route("/filibuster/update", methods=['POST'])
@@ -682,7 +683,8 @@ def update():
 
         return jsonify({})
     except Exception as e:
-        error("Exception when calling UPDATE: ", e)
+        error("Exception when calling UPDATE:")
+        print(e, file=sys.stderr)
     return jsonify({})
 
 

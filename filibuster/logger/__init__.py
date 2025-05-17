@@ -19,14 +19,15 @@ def error(string):
     print("[FILIBUSTER] [FAIL]: " + string, file=sys.stderr, flush=True)
 
 def warning(string):
-    pass
-    # print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
-    # print("[FILIBUSTER] [WARNING]: " + string, file=sys.stderr, flush=True)
+    if os.environ.get("DEBUG", ""):
+        # print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+        print("[FILIBUSTER] [WARNING]: " + string, file=sys.stderr, flush=True)
 
 
 def notice(string):
-    # print(BColors.OKGREEN + "[FILIBUSTER] [NOTICE]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
-    print("[FILIBUSTER] [NOTICE]: " + string, file=sys.stderr, flush=True)
+    if os.environ.get("DEBUG", ""):
+        # print(BColors.OKGREEN + "[FILIBUSTER] [NOTICE]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+        print("[FILIBUSTER] [NOTICE]: " + string, file=sys.stderr, flush=True)
     
 
 
