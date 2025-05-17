@@ -682,8 +682,8 @@ def update():
 
         return jsonify({})
     except Exception as e:
-        error("Exception when calling UPDATE: ")
-        print(e, file=sys.stderr)
+        error("Exception when calling UPDATE: ", e)
+    return jsonify({})
 
 
 def start_thread(queue, functional_test, counterexample_file, num_requests):

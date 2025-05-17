@@ -111,12 +111,12 @@ def _instrument(service_name=None, filibuster_url=None):
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
     req_ses = Session()
-    req_ses.mount("http://", HTTPAdapter(max_retries=Retry(
-        connect=1,
-        backoff_factor=0.1,
-    )))
+    # req_ses.mount("http://", HTTPAdapter(max_retries=Retry(
+    #     connect=1,
+    #     backoff_factor=0.1,
+    # )))
     DEFAULT_INSTR_TIMEOUT = (1, 1)
-    
+
     instr_req = req_ses.request
     wrapped_request = Session.request
     wrapped_send = Session.send
