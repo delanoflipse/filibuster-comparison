@@ -3,13 +3,15 @@ import requests
 from filibuster.logger import error
 
 FILIBUSTER_HOST = "127.0.0.1"
-FILIBUSTER_PORT = "5005"
+FILIBUSTER_PORT = "5050"
 TIMEOUT = 10
 
+# Use a session, to reuse the same TCP connection for multiple requests.
+s = requests.Session()
 
 def was_fault_injected():
     uri = "http://{}:{}/filibuster/fault-injected".format(FILIBUSTER_HOST, FILIBUSTER_PORT)
-    response = requests.get(uri, timeout=TIMEOUT)
+    response = s.get(uri, timeout=TIMEOUT)
 
     if response.status_code == 200:
         response_json = response.json()
@@ -21,7 +23,7 @@ def was_fault_injected():
 
 def was_fault_injected_on(service_name):
     uri = "http://{}:{}/filibuster/fault-injected/{}".format(FILIBUSTER_HOST, FILIBUSTER_PORT, service_name)
-    response = requests.get(uri, timeout=TIMEOUT)
+    response = s.get(uri, timeout=TIMEOUT)
 
     if response.status_code == 200:
         response_json = response.json()
