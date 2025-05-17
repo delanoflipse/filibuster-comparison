@@ -69,10 +69,9 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
-            # in case of debugging:
+            # Use waitress as WSGI server
+            # This is more stable and performant than the built-in Flask server
             serve(app, listen='*:' + FILIBUSTER_PORT, threads=4)
-            # app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True, debug=False, use_reloader=False)
-            # app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True)
 
     
     server_thread = Server()

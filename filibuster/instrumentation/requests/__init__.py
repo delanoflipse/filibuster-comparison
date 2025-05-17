@@ -96,6 +96,8 @@ else:
     counterexample = None
 
 
+# Allow re-use of the same TCP connection for multiple requests.
+# Otherwise, we might hit the TCP ephemeral port limit.
 adapter = HTTPAdapter(pool_connections=100, pool_maxsize=100)
 # pylint: disable=unused-argument
 # pylint: disable=R0915

@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "filibuster-comparison"
-version = "0.1.0"
-description = ""
-authors = ["Delano Flipse <delanoflipse@hotmail.com>"]
+name = "filibuster"
+version = "0.0.4"
+description = "Filibuster CLI tool and Python client libraries."
+authors = ["Christopher S. Meiklejohn <christopher.meiklejohn@gmail.com>"]
 readme = "README.md"
+license = 'Apache-2.0'
 
 [tool.poetry.dependencies]
 python = "^3.8"
