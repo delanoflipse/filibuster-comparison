@@ -7,7 +7,7 @@ FILIBUSTER_PORT = "5050"
 TIMEOUT = 10
 
 # Use a session, to reuse the same TCP connection for multiple requests.
-s = requests
+s = requests.Session()
 
 def was_fault_injected():
     uri = "http://{}:{}/filibuster/fault-injected".format(FILIBUSTER_HOST, FILIBUSTER_PORT)
