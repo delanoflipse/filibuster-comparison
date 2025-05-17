@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 click = ">=7.1.2"
-flask = "1.0.0"
+flask = "2.2.3"
 jinja2 = "3.0.1"
 werkzeug = "2.2.2"
 itsdangerous = "2.0.1"

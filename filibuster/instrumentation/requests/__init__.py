@@ -495,6 +495,7 @@ def _instrument(service_name=None, filibuster_url=None):
                         exception = getattr(m, exception_info[1])
                     except Exception:
                         warning("Couldn't get actual exception due to exception parse error.")
+                        debug("=> exception: " + str(exception))
 
                 use_traceback = True
 
