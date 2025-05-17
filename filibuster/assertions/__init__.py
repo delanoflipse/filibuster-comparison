@@ -2,11 +2,12 @@ import requests
 
 from filibuster.logger import error
 
-FILIBUSTER_HOST = "localhost"
+FILIBUSTER_HOST = "127.0.0.1"
 FILIBUSTER_PORT = "5050"
 TIMEOUT = 10
 
-s = requests.Session()
+# s = requests.Session()
+s = requests
 
 def was_fault_injected():
     uri = "http://{}:{}/filibuster/fault-injected".format(FILIBUSTER_HOST, FILIBUSTER_PORT)

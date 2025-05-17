@@ -13,6 +13,7 @@ import json
 
 from timeit import default_timer as timer
 
+from filibuster.assertions import FILIBUSTER_HOST, FILIBUSTER_PORT
 from filibuster.datatypes import TestExecution, ServerState
 
 from filibuster.debugging import print_test_executions_actually_ran, print_test_executions_actually_pruned, \
@@ -799,7 +800,7 @@ def start_filibuster_server(analysis_file):
 
     start_filibuster_server_thread(app)
 
-    wait_for_services_to_start([('filibuster', '127.0.0.1', 5050)])
+    wait_for_services_to_start([('filibuster', FILIBUSTER_HOST, FILIBUSTER_PORT)])
     # wait for dns to propagate
     time.sleep(5)
 

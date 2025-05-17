@@ -112,10 +112,11 @@ def _instrument(service_name=None, filibuster_url=None):
 
     req_ses = Session()
     req_ses.mount("http://", HTTPAdapter(max_retries=Retry(
-        connect=3,
+        connect=1,
         backoff_factor=0.1,
     )))
-    DEFAULT_INSTR_TIMEOUT = (0.5, 1.5)
+    DEFAULT_INSTR_TIMEOUT = (1, 1)
+    
     instr_req = req_ses.request
     wrapped_request = Session.request
     wrapped_send = Session.send

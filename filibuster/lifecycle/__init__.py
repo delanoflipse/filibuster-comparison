@@ -1,8 +1,8 @@
-from concurrent.futures import thread
 import time
 import requests
 import threading
 
+from filibuster.assertions import FILIBUSTER_PORT
 from filibuster.logger import debug
 
 TIMEOUT_ITERATIONS = 100
@@ -69,8 +69,8 @@ def start_filibuster_server_thread(app):
 
         def run(self):
             # in case of debugging:
-            app.run(port=5050, host="0.0.0.0", threaded=False, debug=False, use_reloader=False)
-            # app.run(port=5050, host="0.0.0.0", threaded=True)
+            app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=False, debug=False, use_reloader=False)
+            # app.run(port=FILIBUSTER_PORT, host="0.0.0.0", threaded=True)
 
     server_thread = Server()
     server_thread.setDaemon(True)
