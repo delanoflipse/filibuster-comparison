@@ -567,7 +567,7 @@ def _instrument(service_name=None, filibuster_url=None):
             elif counterexample is not None:
                 notice("Skipping request, replaying from local counterexample.")
             else:
-                response = instr_req(self, 'put', filibuster_create_url(filibuster_url), json=payload)
+                response = instr_req('put', filibuster_create_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
         except Exception as e:
             warning("Exception raised (_record_call)!")
             print(e, file=sys.stderr)

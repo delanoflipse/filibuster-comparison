@@ -29,11 +29,11 @@ cd $project_path
 
 # flask_debug=${FLASK_DEBUG:-""}
 # debug=${DEBUG:-""}
-if [ -z $FLASK_DEBUG]; then
+if [ -z $FLASK_DEBUG ]; then
     export FLASK_DEBUG=$FLASK_DEBUG
 fi
 
-if [ -z $DEBUG]; then
+if [ -z $DEBUG ]; then
     export DEBUG=$DEBUG
 fi
 
