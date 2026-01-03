@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ./run_experiment.sh cinema-1 
 ./run_experiment.sh cinema-2
 ./run_experiment.sh cinema-3
