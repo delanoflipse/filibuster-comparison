@@ -1,3 +1,5 @@
+#!/bin/bash
+
 iterations=${N:-30}
 result_tag=$1:
 
@@ -40,5 +42,4 @@ run_n_benchmark expedia
 run_n_benchmark mailchimp test_get_url_random.py
 run_n_benchmark mailchimp test_get_url.py
 run_n_benchmark netflix
-export NETFLIX_FAULTS=1
-run_n_benchmark netflix test_get_homepage.py faults
+NETFLIX_FAULTS=1 run_n_benchmark netflix test_get_homepage.py faults
