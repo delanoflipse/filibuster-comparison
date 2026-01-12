@@ -2,6 +2,8 @@ import time
 import requests
 import threading
 
+from waitress import serve
+from filibuster.assertions import FILIBUSTER_PORT
 from filibuster.logger import debug
 
 TIMEOUT_ITERATIONS = 100
@@ -12,7 +14,7 @@ def num_services_running(services):
     num_running = len(services)
     for service in services:
         if not service_running(service):
-            debug("! service " + service + " not yet running!")
+            debug("! service " + str(service) + " not yet running!")
             num_running -= 1
     return num_running
 
@@ -67,8 +69,11 @@ def start_filibuster_server_thread(app):
             threading.Thread.__init__(self)
 
         def run(self):
-            app.run(port=5005, host="0.0.0.0")
+            # Use waitress as WSGI server
+            # This is more stable and performant than the built-in Flask server
+            serve(app, listen='*:' + FILIBUSTER_PORT, threads=4)
 
+    
     server_thread = Server()
     server_thread.setDaemon(True)
     server_thread.start()

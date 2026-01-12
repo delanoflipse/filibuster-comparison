@@ -28,6 +28,9 @@ from requests.sessions import Session
 from requests.structures import CaseInsensitiveDict
 from requests import exceptions
 
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 from threading import Lock
 
 from filibuster.global_context import get_value as _filibuster_global_context_get_value
@@ -93,6 +96,9 @@ else:
     counterexample = None
 
 
+# Allow re-use of the same TCP connection for multiple requests.
+# Otherwise, we might hit the TCP ephemeral port limit.
+adapter = HTTPAdapter(pool_connections=100, pool_maxsize=100)
 # pylint: disable=unused-argument
 # pylint: disable=R0915
 def _instrument(service_name=None, filibuster_url=None):
@@ -107,6 +113,16 @@ def _instrument(service_name=None, filibuster_url=None):
     # before v1.0.0, Dec 17, 2012, see
     # https://github.com/psf/requests/commit/4e5c4a6ab7bb0195dececdd19bb8505b872fe120)
 
+    instr_ses = Session()
+    instr_ses.mount("http://", adapter)
+    req_ses = Session()
+    req_ses.mount("https://", adapter)
+
+    DEFAULT_INSTR_TIMEOUT = (1, 1)
+
+    filibuster_request = req_ses.request
+    instrumentation_request = instr_ses.request
+    instrumentation_send = instr_ses.send
     wrapped_request = Session.request
     wrapped_send = Session.send
 
@@ -143,7 +159,7 @@ def _instrument(service_name=None, filibuster_url=None):
             else:
                 kwargs['headers'] = additional_headers
 
-            response = wrapped_request(self, method, url, *args, **kwargs)
+            response = instrumentation_request(method, url, *args, **kwargs)
             debug("instrumented_request.call_wrapped exiting")
             return response
 
@@ -168,7 +184,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
         def call_wrapped(additional_headers):
             debug("instrumented_send.call_wrapped entering")
-            response = wrapped_send(self, request, **kwargs)
+            response = instrumentation_send(request, **kwargs)
             debug("instrumented_send.call_wrapped exiting")
             return response
 
@@ -223,8 +239,7 @@ def _instrument(service_name=None, filibuster_url=None):
 
                 response = None
                 if not (os.environ.get('DISABLE_SERVER_COMMUNICATION', '')) and counterexample is None:
-                    response = wrapped_request(self, 'get',
-                                               filibuster_new_test_execution_url(filibuster_url, service_name))
+                    response = filibuster_request('get', filibuster_new_test_execution_url(filibuster_url, service_name), timeout=DEFAULT_INSTR_TIMEOUT)
                     if response is not None:
                         response = response.json()
 
@@ -482,6 +497,7 @@ def _instrument(service_name=None, filibuster_url=None):
                         exception = getattr(m, exception_info[1])
                     except Exception:
                         warning("Couldn't get actual exception due to exception parse error.")
+                        debug("=> exception: " + str(exception))
 
                 use_traceback = True
 
@@ -557,7 +573,7 @@ def _instrument(service_name=None, filibuster_url=None):
             elif counterexample is not None:
                 notice("Skipping request, replaying from local counterexample.")
             else:
-                response = wrapped_request(self, 'put', filibuster_create_url(filibuster_url), json=payload)
+                response = filibuster_request('put', filibuster_create_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
         except Exception as e:
             warning("Exception raised (_record_call)!")
             print(e, file=sys.stderr)
@@ -612,7 +628,7 @@ def _instrument(service_name=None, filibuster_url=None):
                     'vclock': vclock,
                     'return_value': return_value
                 }
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                filibuster_request('post', filibuster_update_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
             except Exception as e:
                 warning("Exception raised (_record_successful_response)!")
                 print(e, file=sys.stderr)
@@ -652,7 +668,7 @@ def _instrument(service_name=None, filibuster_url=None):
                 if should_abort is not True:
                     payload['exception']['metadata']['abort'] = should_abort
 
-                wrapped_request(self, 'post', filibuster_update_url(filibuster_url), json=payload)
+                filibuster_request('post', filibuster_update_url(filibuster_url), json=payload, timeout=DEFAULT_INSTR_TIMEOUT)
             except Exception as e:
                 warning("Exception raised (_record_exceptional_response)!")
                 print(e, file=sys.stderr)

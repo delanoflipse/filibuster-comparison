@@ -13,6 +13,7 @@ import json
 
 from timeit import default_timer as timer
 
+from filibuster.assertions import FILIBUSTER_HOST, FILIBUSTER_PORT
 from filibuster.datatypes import TestExecution, ServerState
 
 from filibuster.debugging import print_test_executions_actually_ran, print_test_executions_actually_pruned, \
@@ -125,6 +126,9 @@ def run_test(functional_test, only_initial_execution, disable_dynamic_reduction)
             if os.environ.get("PAUSE_BETWEEN", ""):
                 input("Press Enter to start next test...")
 
+            if os.environ.get("SLEEP_BETWEEN", ""):
+                time.sleep(float(os.environ.get("SLEEP_BETWEEN")))
+            
             iteration = iteration + 1
 
             # Quit early if we want to bound the number of tests.
@@ -602,6 +606,7 @@ def create():
     except Exception as e:
         error("Exception when calling CREATE: ")
         print(e, file=sys.stderr)
+        return jsonify({})
 
 
 @app.route("/filibuster/update", methods=['POST'])
@@ -678,8 +683,9 @@ def update():
 
         return jsonify({})
     except Exception as e:
-        error("Exception when calling UPDATE: ")
+        error("Exception when calling UPDATE:")
         print(e, file=sys.stderr)
+    return jsonify({})
 
 
 def start_thread(queue, functional_test, counterexample_file, num_requests):
@@ -796,7 +802,9 @@ def start_filibuster_server(analysis_file):
 
     start_filibuster_server_thread(app)
 
-    wait_for_services_to_start([('filibuster', '127.0.0.1', 5005)])
+    wait_for_services_to_start([('filibuster', FILIBUSTER_HOST, FILIBUSTER_PORT)])
+    # wait for dns to propagate
+    time.sleep(5)
 
 
 def my_percentile(data, percentile):

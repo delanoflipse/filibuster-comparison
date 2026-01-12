@@ -9,3 +9,5 @@ test.py
 analysis.json
 .coverage
 .vscode/
+.venv
+results

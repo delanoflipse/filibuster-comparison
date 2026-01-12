@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 
 class BColors:
@@ -13,23 +14,38 @@ class BColors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+def get_timestamp():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+USE_COLOR = os.environ.get("USE_COLOR", "true").lower() == "true"
+
+def log_string(tag: str, string: str):
+    return get_timestamp() + " [FILIBUSTER] [" + tag + "]: " + string
+
+def with_color(color, string):
+    if USE_COLOR:
+        return color + string + BColors.ENDC
+    else:
+        return string
 
 def error(string):
-    print(BColors.FAIL + "[FILIBUSTER] [FAIL]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
-
+    print(with_color(BColors.FAIL, log_string("FAIL", string)), file=sys.stderr, flush=True)
 
 def warning(string):
-    print(BColors.WARNING + "[FILIBUSTER] [WARNING]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    if os.environ.get("DEBUG", ""):
+        print(with_color(BColors.WARNING, log_string("WARNING", string)), file=sys.stderr, flush=True)
 
 
 def notice(string):
-    print(BColors.OKGREEN + "[FILIBUSTER] [NOTICE]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    if os.environ.get("DEBUG", ""):
+        print(with_color(BColors.OKGREEN, log_string("NOTICE", string)), file=sys.stderr, flush=True)
+    
 
 
 def info(string):
-    print(BColors.OKBLUE + "[FILIBUSTER] [INFO]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+    print(with_color(BColors.OKBLUE, log_string("INFO", string)), file=sys.stderr, flush=True)
 
 
 def debug(string):
     if os.environ.get("DEBUG", ""):
-        print(BColors.OKCYAN + "[FILIBUSTER] [DEBUG]: " + string + BColors.ENDC, file=sys.stderr, flush=True)
+        print(with_color(BColors.OKCYAN, log_string("DEBUG", string)), file=sys.stderr, flush=True)
